@@ -10,7 +10,7 @@ import { Badge } from "../components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "../components/ui/dialog"
-import { Globe, Shirt, Sparkles, ThumbsUp, Camera, Heart, MessageCircle, Share2, X, Palette, LogIn, UserPlus, Settings, Grid, User } from 'lucide-react'
+import { ThumbsUp, Camera, Heart, MessageCircle, Share2, X, Palette, LogIn, UserPlus, Settings, Grid, User } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { login, register, createPost, getPosts } from '../frontend/api';
 type ClothingItem = {
