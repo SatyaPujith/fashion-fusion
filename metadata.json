@@ -1,0 +1,6 @@
+{
+  "name": "Fashion Fusion",
+  "description": "AI-powered fashion e-commerce with real-time multi-layer try-on studio, precision virtual fitting room, and intelligent cart fit advisor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
