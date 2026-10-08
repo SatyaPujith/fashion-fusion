@@ -4,14 +4,20 @@
 
 **AI-Powered Fashion E-Commerce with Virtual Try-On & Smart Fit Analysis**
 
-Fashion Fusion is a modern e-commerce application that combines real-time product data from Shopify with AI-powered features including virtual fitting room, try-on studio, and intelligent cart recommendations.
+Fashion Fusion is a modern e-commerce application that combines real-time product data from Google Shopping with AI-powered virtual try-on using YouCam API. Experience the future of online fashion shopping with realistic virtual try-on for clothing, shoes, bags, accessories, and more.
 
 ## 🌟 Features
 
-- **🛍️ Real Product Fetching**: Get professional fashion products from Google Shopping via SerpAPI
+- **🛍️ Real Product Fetching**: 100+ professional fashion products from Google Shopping via SerpAPI
 - **📸 Professional Images**: High-quality product photos with clean, minimal backgrounds
-- **👔 Virtual Try-On Studio**: Mix and match outfits across categories
+- **👔 Virtual Try-On Studio**: AI-powered realistic try-on using YouCam API
+  - Clothing (tops, bottoms, dresses, outerwear)
+  - Shoes (sneakers, heels, boots)
+  - Bags (handbags, backpacks, totes)
+  - Accessories (scarves, hats)
 - **📏 Smart Fitting Room**: AI-powered size recommendations based on body measurements
+- **🎯 Gender-Based Filtering**: Separate Men's and Women's collections
+- **🤖 AI Category Detection**: Automatic routing to correct try-on API for each product type
 - **🛒 Intelligent Cart**: Automatic fit analysis and size warnings
 - **📱 Responsive Design**: Beautiful UI that works on all devices
 - **⚡ Performance Optimized**: Image CDN optimization and lazy loading
@@ -23,7 +29,8 @@ Fashion Fusion is a modern e-commerce application that combines real-time produc
 ### Prerequisites
 
 - **Node.js** (v18 or higher)
-- **Shopify Store** (optional - works with demo data if not configured)
+- **SerpAPI Key** (for product fetching - 100 free searches/month)
+- **YouCam API Key** (for virtual try-on - get from [makeupar.com](https://yce.makeupar.com))
 
 ### Installation
 
@@ -38,10 +45,20 @@ Fashion Fusion is a modern e-commerce application that combines real-time produc
    npm install
    ```
 
-3. **Configure environment variables** (optional for SerpAPI)
+3. **Configure environment variables**
    ```bash
    cp .env.example .env.local
-   # Add your SerpAPI key to .env.local for real Google Shopping products
+   ```
+   
+   Edit `.env.local` and add your API keys:
+   ```env
+   # SerpAPI - For product fetching (REQUIRED)
+   VITE_SERPAPI_KEY=your_serpapi_key_here
+   
+   # YouCam API - For virtual try-on (REQUIRED)
+   VITE_YOUCAM_API_KEY=your_youcam_api_key
+   VITE_YOUCAM_SECRET_KEY=your_youcam_secret_key
+   VITE_YOUCAM_BASE_URL=https://yce-api-01.makeupar.com
    ```
 
 4. **Run the development server**
@@ -54,31 +71,51 @@ Fashion Fusion is a modern e-commerce application that combines real-time produc
    http://localhost:3000
    ```
 
-The app will start with demo data. To use **real Google Shopping products with professional images**, follow the SerpAPI setup below.
-
 ---
 
-## 🛍️ SerpAPI Integration (Real Google Shopping Products)
+## � API Setup Guide
 
-### Why Use SerpAPI?
+### 1. SerpAPI (Product Fetching)
 
-- Get **37+ real fashion products** from Google Shopping
-- **Professional product photography** with clean backgrounds
-- Real brands, accurate pricing, and detailed product info
-- High-quality images optimized for e-commerce
+**What it does**: Fetches 100+ real fashion products from Google Shopping with professional images
 
-### Quick Setup (5 minutes):
-
-1. **Get API Key** from [serpapi.com](https://serpapi.com) (100 free searches/month)
-2. **Add to `.env.local`**:
+1. **Sign up** at [serpapi.com](https://serpapi.com) (100 free searches/month)
+2. **Get your API key** from the dashboard
+3. **Add to `.env.local`**:
    ```env
    VITE_SERPAPI_KEY=your_actual_api_key_here
    ```
-3. **Restart app**: `npm run dev`
 
-**Done!** Real products with professional images load automatically.
+**Products fetched**:
+- Men's & Women's: Tops, Bottoms, Outerwear, Dresses
+- Shoes (Men's & Women's)
+- Bags (Handbags, Backpacks)
+- Accessories (Scarves, Hats, Jewelry)
 
-📚 **Detailed Guide**: See [SERPAPI_SETUP.md](./SERPAPI_SETUP.md)
+### 2. YouCam API (Virtual Try-On)
+
+**What it does**: AI-powered realistic virtual try-on for fashion products
+
+1. **Sign up** at [makeupar.com](https://yce.makeupar.com/api-console/en/api-keys/)
+2. **Get your credentials**:
+   - API Key
+   - Secret Key (for authentication)
+3. **Add to `.env.local`**:
+   ```env
+   VITE_YOUCAM_API_KEY=sk-xxxxx
+   VITE_YOUCAM_SECRET_KEY=your_secret_key
+   VITE_YOUCAM_BASE_URL=https://yce-api-01.makeupar.com
+   ```
+
+**Supported Categories**:
+- ✅ **Clothing**: Tops, Bottoms, Dresses, Outerwear
+- ✅ **Shoes**: All types (sneakers, heels, boots, etc.)
+- ✅ **Bags**: Handbags, backpacks, totes
+- ✅ **Scarves**: Scarves, shawls, wraps
+- ✅ **Hats**: All headwear
+- ❌ **Jewelry**: Not supported (API limitation)
+
+📚 **Detailed Guide**: See [YOUCAM_API_WORKING_ENDPOINTS.md](./YOUCAM_API_WORKING_ENDPOINTS.md)
 
 ---
 
@@ -88,36 +125,38 @@ The app will start with demo data. To use **real Google Shopping products with p
 fashion-fusion/
 ├── src/
 │   ├── components/          # React components
-│   │   ├── Navbar.tsx       # Navigation with Shopify config
-│   │   ├── ProductCatalog.tsx
-│   │   ├── TryOnStudio.tsx
-│   │   ├── FittingRoom.tsx
-│   │   ├── AiCartDrawer.tsx
-│   │   └── ShopifyConfig.tsx # Shopify setup UI
+│   │   ├── Navbar.tsx       # Navigation
+│   │   ├── ProductCatalog.tsx  # Product browsing with gender filters
+│   │   ├── TryOnStudio.tsx     # Virtual try-on workflow
+│   │   ├── FittingRoom.tsx     # Size recommendations
+│   │   ├── AiCartDrawer.tsx    # Smart shopping cart
+│   │   ├── GarmentSilhouette.tsx  # Product visualization
+│   │   └── MannequinVisualizer.tsx
 │   │
 │   ├── services/            # API services
-│   │   └── shopifyAPI.ts    # Shopify Storefront API client
+│   │   ├── serpAPI.ts       # Google Shopping product fetching
+│   │   ├── youCamAPI.ts     # Virtual try-on API client
+│   │   ├── productCategoryDetector.ts  # AI category detection
+│   │   └── fashionAPI.ts    # Fallback API
 │   │
 │   ├── hooks/               # Custom React hooks
 │   │   └── useProducts.tsx  # Product data management
 │   │
 │   ├── utils/               # Utility functions
-│   │   ├── fitEngine.ts     # Size recommendation logic
-│   │   └── imageOptimization.ts # Shopify CDN optimization
+│   │   └── fitEngine.ts     # Size recommendation logic
 │   │
 │   ├── types/               # TypeScript types
-│   │   ├── fashion.ts       # App types
-│   │   └── shopify.ts       # Shopify API types
-│   │
-│   ├── config/              # Configuration
-│   │   └── shopify.ts       # Shopify config helper
+│   │   └── fashion.ts       # App types & interfaces
 │   │
 │   └── data/
 │       └── mockProducts.ts  # Demo data (fallback)
 │
 ├── .env.example             # Environment variables template
 ├── .env.local              # Your local config (git-ignored)
-└── package.json
+├── README.md               # This file
+├── YOUCAM_API_WORKING_ENDPOINTS.md  # YouCam API reference
+├── MULTI_CATEGORY_IMPLEMENTATION.md  # Technical docs
+└── AI_PRODUCT_DETECTION_GUIDE.md    # AI detection guide
 ```
 
 ---
@@ -125,28 +164,41 @@ fashion-fusion/
 ## 🎨 Features Deep Dive
 
 ### 1. Product Catalog
-- Browse products from Shopify or demo data
-- Filter by category (tops, bottoms, outerwear, etc.)
+- Browse 100+ real products from Google Shopping
+- **Gender-based filtering**: Men's Wear and Women's Wear sections
+- Filter by 10+ categories (tops, bottoms, shoes, bags, scarves, hats, jewelry, etc.)
 - Real-time availability status
-- Quick actions: Add to cart, Try in studio, Check fit
+- Professional product images
+- Quick actions: Add to cart, Virtual Try-On, Check fit
 
 ### 2. Virtual Try-On Studio
-- Mix and match items across categories
-- See complete outfit visualization
-- AI styling suggestions
-- Add entire outfits to cart
+- **3-Step Workflow**:
+  1. Upload your photo (full body recommended)
+  2. Select your gender (Men's/Women's)
+  3. Choose products to try on
+- **AI-Powered Category Detection**: Automatically routes to correct API for each product
+- **Realistic Results**: Powered by YouCam API
+- **Supported Items**:
+  - Clothing (shirts, pants, dresses, jackets)
+  - Shoes (all types)
+  - Bags (handbags, backpacks)
+  - Scarves (realistic draping)
+  - Hats (perfect fit)
+- Add successful try-ons directly to cart
 
 ### 3. Virtual Fitting Room
 - Input your body measurements
 - Get AI-powered size recommendations
 - See fit analysis for each product
 - Visual fit indicators (perfect/caution/mismatch)
+- Personalized styling advice
 
-### 4. Intelligent Cart
+### 4. Intelligent Shopping Cart
 - Automatic fit evaluation for each item
 - Size conflict warnings
 - Recommendations to optimize fit
 - Update sizes without removing items
+- Calculate total with discounts
 
 ---
 
@@ -167,14 +219,31 @@ npm run clean        # Remove build artifacts
 
 ---
 
-## 🎯 Next Steps: YouCam API Integration
+## 🎯 How It Works
 
-Ready to add real virtual try-on? Check out the [Integration Plan](./INTEGRATION_PLAN.md) for:
+### Product Fetching
+1. App fetches 100+ real products from Google Shopping via SerpAPI
+2. Products are categorized by type and gender automatically
+3. Professional images with clean backgrounds are used
 
-- YouCam API setup and configuration
-- Virtual try-on implementation guide
-- User photo upload workflow
-- Cost estimates and feasibility analysis
+### Virtual Try-On Process
+1. **User uploads photo**: Full body photo recommended
+2. **Gender selection**: Choose Men's or Women's
+3. **Product selection**: Browse and select items to try
+4. **AI Detection**: System automatically detects product category
+5. **API Routing**: Routes to correct YouCam endpoint (clothing, shoes, bags, etc.)
+6. **Generate**: AI generates realistic try-on image
+7. **Review & Shop**: Add liked items to cart
+
+### AI Category Detection
+The app uses intelligent pattern matching to route products to the correct API:
+- **Clothing** → cloth-v4 endpoint
+- **Shoes** → shoes-transfer endpoint
+- **Bags** → bag endpoint
+- **Scarves** → scarf endpoint
+- **Hats** → hat endpoint
+
+See [AI_PRODUCT_DETECTION_GUIDE.md](./AI_PRODUCT_DETECTION_GUIDE.md) for details.
 
 ---
 
@@ -182,29 +251,31 @@ Ready to add real virtual try-on? Check out the [Integration Plan](./INTEGRATION
 
 - **Frontend**: React 19 + TypeScript
 - **Styling**: Tailwind CSS 4
-- **Build Tool**: Vite 8
+- **Build Tool**: Vite 5
 - **State Management**: React Context + Hooks
-- **API Integration**: Shopify Storefront API (GraphQL)
+- **APIs**: 
+  - SerpAPI (Google Shopping product data)
+  - YouCam API (Virtual try-on)
 - **Icons**: Lucide React
-- **Animations**: Framer Motion
+- **Animations**: CSS Transitions
 
 ---
 
 ## 📝 Environment Variables
 
 ```env
-# Gemini AI (for future AI features)
-GEMINI_API_KEY=your_gemini_api_key
+# SerpAPI - Product Fetching (REQUIRED)
+VITE_SERPAPI_KEY=your_serpapi_api_key
 
-# Shopify Integration
-VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=shpat_xxxxx
-VITE_SHOPIFY_API_VERSION=2024-01
-
-# Optional: YouCam API (future feature)
-# VITE_YOUCAM_API_KEY=your_youcam_api_key
-# VITE_YOUCAM_API_ENDPOINT=https://api.perfectcorp.com/v3
+# YouCam API - Virtual Try-On (REQUIRED)
+VITE_YOUCAM_API_KEY=sk-xxxxx
+VITE_YOUCAM_SECRET_KEY=your_secret_key
+VITE_YOUCAM_BASE_URL=https://yce-api-01.makeupar.com
 ```
+
+**Getting API Keys**:
+1. **SerpAPI**: Sign up at [serpapi.com](https://serpapi.com) (100 free searches/month)
+2. **YouCam**: Register at [makeupar.com](https://yce.makeupar.com/api-console/en/api-keys/)
 
 ---
 
@@ -220,27 +291,41 @@ This project is part of AI Studio and follows its licensing terms.
 
 ---
 
-## 🆘 Support
+## 🆘 Support & Documentation
 
-Having issues? Check out:
+Having issues? Check out our comprehensive documentation:
 
-1. **Shopify Setup**: See the [Shopify Integration](#-shopify-integration) section above
-2. **Integration Plan**: Review [INTEGRATION_PLAN.md](./INTEGRATION_PLAN.md) for detailed architecture
-3. **Troubleshooting**: Check console logs for specific error messages
+1. **API Setup**:
+   - [SerpAPI Integration](#1-serpapi-product-fetching)
+   - [YouCam API Setup](#2-youcam-api-virtual-try-on)
+   
+2. **Technical Docs**:
+   - [YOUCAM_API_WORKING_ENDPOINTS.md](./YOUCAM_API_WORKING_ENDPOINTS.md) - Complete API reference
+   - [MULTI_CATEGORY_IMPLEMENTATION.md](./MULTI_CATEGORY_IMPLEMENTATION.md) - Architecture guide
+   - [AI_PRODUCT_DETECTION_GUIDE.md](./AI_PRODUCT_DETECTION_GUIDE.md) - AI detection logic
+
+3. **Troubleshooting**:
+   - Check browser console for error messages
+   - Verify API keys are correctly set in `.env.local`
+   - Ensure all required environment variables are present
 
 ---
 
 ## 🔮 Roadmap
 
-- [x] Shopify product integration
+- [x] SerpAPI product integration (Google Shopping)
 - [x] Smart fit analysis
-- [x] Virtual try-on studio
-- [x] Image optimization
-- [ ] YouCam API integration for real photo try-on
+- [x] Virtual try-on studio UI
+- [x] YouCam API integration for real photo try-on
+- [x] AI-powered category detection
+- [x] Gender-based product filtering
+- [x] Multi-category support (clothing, shoes, bags, accessories)
 - [ ] User authentication and profiles
+- [ ] Save favorite try-on results
 - [ ] Order history and tracking
 - [ ] Social sharing features
 - [ ] Wishlist functionality
+- [ ] Size profile saving
 
 ---
 
