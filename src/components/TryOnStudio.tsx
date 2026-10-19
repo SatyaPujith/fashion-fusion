@@ -3,7 +3,7 @@ import { Product, GarmentColor, BodyMeasurements, TryOnSelection } from '../type
 import { GarmentSilhouette } from './GarmentSilhouette';
 import { 
   Upload, Check, Sparkles, ShoppingBag, AlertCircle, 
-  Loader2, Trash2, ArrowRight, User
+  Loader2, Trash2, ArrowRight, User, Download
 } from 'lucide-react';
 import { createYouCamAPIService, TryOnResult } from '../services/youCamAPI';
 
@@ -40,6 +40,25 @@ export const TryOnStudio: React.FC<TryOnStudioProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const youCamService = createYouCamAPIService();
+
+  // Download try-on result image
+  const handleDownloadImage = async (imageUrl: string, productName: string) => {
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `fashion-fusion-tryon-${productName.replace(/\s+/g, '-').toLowerCase()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to download image:', error);
+      setError('Failed to download image. Please try again.');
+    }
+  };
 
   // Filter products by gender and category
   const genderFilteredProducts = selectedGender 
@@ -506,14 +525,25 @@ export const TryOnStudio: React.FC<TryOnStudioProps> = ({
                               </h3>
                               <p className="text-stone-600 mb-4">${selected.product.price}</p>
 
-                              <button
-                                onClick={() => onAddToCart(selected.product, 'M', selected.color)}
-                                disabled={!resultUrl}
-                                className="w-full py-3 bg-stone-900 hover:bg-stone-800 disabled:bg-stone-300 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
-                              >
-                                <ShoppingBag className="w-4 h-4" />
-                                Add to Cart
-                              </button>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleDownloadImage(resultUrl!, selected.product.name)}
+                                  disabled={!resultUrl}
+                                  className="flex-1 py-3 bg-stone-700 hover:bg-stone-600 disabled:bg-stone-300 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                                  title="Download try-on image"
+                                >
+                                  <Download className="w-4 h-4" />
+                                  Download
+                                </button>
+                                <button
+                                  onClick={() => onAddToCart(selected.product, 'M', selected.color)}
+                                  disabled={!resultUrl}
+                                  className="flex-1 py-3 bg-stone-900 hover:bg-stone-800 disabled:bg-stone-300 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                                >
+                                  <ShoppingBag className="w-4 h-4" />
+                                  Add to Cart
+                                </button>
+                              </div>
                             </div>
                           </div>
                         );
