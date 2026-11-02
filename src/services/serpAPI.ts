@@ -33,7 +33,7 @@ interface SerpAPIResponse {
 
 export class SerpAPIService {
   private apiKey: string;
-  private baseUrl = 'https://serpapi.com/search'; // Direct SerpAPI endpoint
+  private baseUrl = '/api/serpapi'; // Vercel serverless function proxy
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
