@@ -33,7 +33,7 @@ interface SerpAPIResponse {
 
 export class SerpAPIService {
   private apiKey: string;
-  private baseUrl = '/api/serpapi'; // Use Vite proxy to avoid CORS
+  private baseUrl = 'https://serpapi.com/search'; // Direct SerpAPI endpoint
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
